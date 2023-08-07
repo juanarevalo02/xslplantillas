@@ -20,7 +20,9 @@ table.center {
             <td>Id</td>
             <td>Puntuacion CVSS</td>
             <td>Vector de Vulnerabilidades</td>
-            <td>Estado Exploit</td>
+            <td>Epss</td>
+            <td>Fecha</td>
+            <td>Porcentaje</td>
             <td>Descripcion</td>
             </tr>
             <xsl:for-each select="ports/port/script/table/table">
@@ -39,8 +41,16 @@ table.center {
                 <xsl:value-of select="elem[@key='vector']"/>
                 <xsl:text>&#xa;</xsl:text>
                 </td> 
-                 <td>
-                <xsl:value-of select="elem[@key='is_exploit']"/>
+                <td>
+                <xsl:value-of select="elem[@key='epss']"/>
+                <xsl:text>&#xa;</xsl:text>
+                </td>
+                <td>
+                <xsl:value-of select="elem[@key='date']"/>
+                <xsl:text>&#xa;</xsl:text>
+                </td>
+                <td>
+                <xsl:value-of select="elem[@key='percentile']"/>
                 <xsl:text>&#xa;</xsl:text>
                 </td>
                 <td>
@@ -65,35 +75,86 @@ table.center {
             <td>Descripcion</td>
             </tr>
             <xsl:for-each select="ports/port/script/table/table">
-<tr class="body"> 
+
   
-             	     <xsl:if test="(elem[@key='is_exploit'] = 'true' )">              
-                 <td>
-                <xsl:value-of select="elem[@key='id']"/>
-                <xsl:text>&#xa;</xsl:text>
-                </td>
-                 <td>
-                <xsl:value-of select="elem[@key='cvss']"/>
-                <xsl:text>&#xa;</xsl:text>
-                </td>    
-                 <td>
-                <xsl:value-of select="elem[@key='vector']"/>
-                <xsl:text>&#xa;</xsl:text>
-                </td> 
-                 <td>
-                <xsl:value-of select="elem[@key='is_exploit']"/>
-                <xsl:text>&#xa;</xsl:text>
-                </td>
-                <td>
-                <xsl:value-of select="substring(elem[@key='descriptioncve'],1,40)"/>
-                <xsl:text>&#xa;</xsl:text>
-                </td>                              
+             	     <xsl:if test="(elem[@key='is_exploit'] = 'true' )"> 
+             	     <tr class="body">              
+		         <td>
+		        <xsl:value-of select="elem[@key='id']"/>
+		        <xsl:text>&#xa;</xsl:text>
+		        </td>
+		         <td>
+		        <xsl:value-of select="elem[@key='cvss']"/>
+		        <xsl:text>&#xa;</xsl:text>
+		        </td>    
+		         <td>
+		        <xsl:value-of select="elem[@key='vector']"/>
+		        <xsl:text>&#xa;</xsl:text>
+		        </td> 
+		         <td>
+		        <xsl:value-of select="elem[@key='type']"/>
+		        <xsl:text>&#xa;</xsl:text>
+		        </td>
+		        <td>
+		        <xsl:value-of select="substring(elem[@key='descriptioncve'],1,40)"/>
+		        <xsl:text>&#xa;</xsl:text>
+               		</td>                              
+		  </tr> 
 		  </xsl:if>   
             
-</tr> 
+		
 		  </xsl:for-each>
 
         </table>
 </xsl:for-each>
+<xsl:for-each select="host">
+	<p> El programa Nmap encontro los siguientes CAPEC relacionados con las CVES antes encontradas  <xsl:value-of select="address/@addr"/> :</p> 
+        <table cellspacing="1">
+            <tr class="head">
+            <td>Id</td>
+            <td>Patron de Ataque</td>
+            <td>Sumario</td>
+            <td>Solucion</td>
+            <td>Prerequisitos</td>
+            </tr>
+            <xsl:for-each select="ports/port/script/table/table">
+
+             	    
+             	     <xsl:if test="(elem[@key='type'] = 'cve' )">              
+			 <xsl:if test="count(./table/table) &gt; 0">	
+			  <xsl:for-each select="./table/table">
+			  	<tr class="body"> 
+  				<td>
+				<xsl:value-of select="../../elem[@key='id']"/>
+				<xsl:text>&#xa;</xsl:text>
+				</td>
+			 	<td>
+				<xsl:value-of select="elem[@key='name']"/>
+				<xsl:text>&#xa;</xsl:text>
+				</td>
+				  <td>
+		        	<xsl:value-of select="substring(elem[@key='summary'],1,40)"/>
+		        	<xsl:text>&#xa;</xsl:text>
+               			</td>  
+               			
+               			  <td>
+		        	<xsl:value-of select="substring(elem[@key='solutions'],1,40)"/>
+		       		 <xsl:text>&#xa;</xsl:text>
+               			</td>  
+				
+				</tr>
+				</xsl:for-each>
+				
+                  	</xsl:if> 
+                  	                  
+		  </xsl:if>   
+           		 <tr >  
+                  	</tr> 
+		 
+	</xsl:for-each>
+
+        </table>
+</xsl:for-each>
+
 </xsl:template>
 </xsl:stylesheet>
