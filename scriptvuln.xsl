@@ -26,7 +26,7 @@ table.center {
 
   <xsl:for-each select="ports/port/script">
                  <tr class="body">   
-                <xsl:if test="not(contains(@output,'ERROR'))">
+                <xsl:if test="not(contains(@output,'ERROR')) and not(contains(@output,'t find')) and not(contains(@output,'NOT VULNERABLE')) and not(contains(@output,'not be vulnerable'))  ">
                 <td>
                 <xsl:value-of select="../service/@name"/>
                 <xsl:text>&#xa;</xsl:text>
@@ -41,12 +41,12 @@ table.center {
                  <td>
 
                 <xsl:if test="contains(@output,'References')">
-                <xsl:value-of select="substring-before(@output,'References')"/>
+                <xsl:value-of select="substring-before(@output,'References')"/>  
                 <xsl:text>&#xa;</xsl:text>
                 </xsl:if>
 
                 <xsl:if test="not(contains(@output,'References'))">
-                <xsl:value-of select="@output"/>
+                <xsl:value-of select="substring(@output,1,200)"/>...
                 <xsl:text>&#xa;</xsl:text>
                 </xsl:if>
 
